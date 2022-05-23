@@ -1,0 +1,13 @@
+{
+  "first_name": "John",
+  "last_name": "Miller",
+  "address": "12th Main Rd,",
+  "city": "Bangalore",
+  "state": "KA",
+  "zipcode": "560008",
+  "phone": "8884398567",
+  "ssn": "12345",
+  "user": "uiautouser",
+  "password": "Welcome1",
+  "confirm": "Welcome1"
+}

@@ -1,0 +1,14 @@
+.idea
+*.log
+screenshots/
+screenrecorder/
+har/
+*.pyc
+report/
+junitresults.xml
+logs/
+venv
+.venv
+__pycache__
+.vscode
+secret.key
