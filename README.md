@@ -2,7 +2,7 @@
 This is the UI Automation framework using python, selenium and pytest
 ## Pre-requisites:
 - Install Python 3.7 and up
-    - for required packages read [requirements.txt](https://github.com/Chitranjankmr24/rr-qa-automation-assignment/blob/main/requirements.txtt)
+    - for required packages read [requirements.txt](https://github.com/Chitranjankmr24/rr-qa-automation-assignment/blob/main/requirements.txt)
     and for installation run this command on terminal: 
     ```bash
     pip install -r requirements.txt
