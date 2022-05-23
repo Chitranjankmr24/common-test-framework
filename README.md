@@ -33,11 +33,11 @@ pytest -vv -rA
 it will run the all the tests in project in sequential mode  
 
 ### How to run 1 test- After a relative test module path add 2 colons and the test name:
-pytest -vv -rA tests/aws/name of the .py file::name of test case
+pytest -vv -rA tests/feature_file_name::name of test case
 ### How to run one feature file all tests
 pytest -vv -rA tests/feature_file_name.py
-### How to run one feature one file all tests
-pytest -vv -rA tests/feature_file_name.py/name of test .py file
+### How to run all tests
+pytest -vv -rA tests
 
 ## Jenkins Run
  You can choose the application url and one specific feature
