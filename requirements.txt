@@ -16,3 +16,5 @@ py~=1.10.0
 numpy>=1.21
 opencv-python>=4.5.4.60
 pytest-order
+Pillow~=9.1.1
+requests~=2.27.1

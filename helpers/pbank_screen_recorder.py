@@ -4,6 +4,7 @@ from PIL import Image
 from io import BytesIO
 import os
 from helpers.pbank_driver_manager import logger, driver
+from helpers.pbank_env import browser_mode
 
 
 def set_screencapture(test_name, video_file_path):
@@ -14,8 +15,10 @@ def set_screencapture(test_name, video_file_path):
     else:
         logger.info('The file doesnt exist')
 
-    resolution = (1920, 1080)  # resolution for head less browser
-    # resolution = (1920, 846) #resolution for headed browser
+    if browser_mode == "headless":
+        resolution = (1920, 1080)  # resolution for head less browser
+    else:
+        resolution = (1920, 846)  # resolution for headed browser
 
     filename = str(video_file_path)
     codec = cv2.VideoWriter_fourcc(*"XVID")

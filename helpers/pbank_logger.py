@@ -1,33 +1,13 @@
 import logging
-import os
 import sys
-import platform
 from logging.handlers import RotatingFileHandler
-from helpers.pbank_resources import root_folder, output_folder, \
-    output_folder_name
-
-current_os = platform.system()
 
 
-class CBLogger:
+class PBankLogger:
     def __init__(self, logger_file_name):
         self.logger = logger_file_name
 
-    @staticmethod
-    def check_and_create_folder(folder_to_created):
-        if current_os == "Linux":
-            if not os.path.isdir(folder_to_created):
-                os.makedirs(folder_to_created)
-        else:
-            if not os.path.isdir(os.path.join(root_folder, folder_to_created)):
-                os.makedirs(os.path.join(root_folder, folder_to_created))
-
-    @staticmethod
-    def create_output_folder():
-        CBLogger.check_and_create_folder(output_folder_name)
-
     def get_logger(self, logger_file):
-        CBLogger.create_output_folder()
         logger = logging.getLogger("python.test.logger")
         logger.setLevel(logging.INFO)
         # logging format

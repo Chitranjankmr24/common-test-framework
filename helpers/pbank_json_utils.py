@@ -1,8 +1,4 @@
 import json
-from collections.abc import Mapping
-import logging
-
-logger = logging.getLogger(__name__)
 
 data_path = None
 dic_data = None

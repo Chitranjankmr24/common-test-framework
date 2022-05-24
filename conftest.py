@@ -1,23 +1,29 @@
 import os.path
+import threading
+
 import pytest
 import re
 
+from helpers.pbank_check import soft_assert_failures_report
 from helpers.pbank_driver_manager import logger, get_current_url, kill_driver_instance, \
     load_url
 from helpers.pbank_element_operations import driver
-from helpers.pbank_resources import screenshot_folder
+from helpers.pbank_resources import screenshot_folder, screenrecorder_folder
 from helpers.pbank_result_notification import *
 from py._xmlgen import html
 from datetime import datetime
 import sys
 from _pytest.runner import runtestprotocol
+
+from helpers.pbank_screen_recorder import set_screencapture
 from pages.login_page import load_base_page, log_into_app
 from helpers.pbank_env import *
+
+logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
 
 sys.stdout = sys.stderr
 server = None
 test_name = ""
-test_suite_name = None
 t_array = []
 t1 = None
 current_file = ""
@@ -38,7 +44,7 @@ def pytest_runtest_makereport(item, call):
     global outcome
     outcome = yield
     report = outcome.get_result()
-    # soft_assert_failures_report(report, call)
+    soft_assert_failures_report(report, call)
     extra = getattr(report, 'extra', [])
     setattr(item, "check_" + report.when, report)
     test_description = getattr(item.function, '__doc__', '')
@@ -64,18 +70,7 @@ def pytest_html_report_title(report):
 
 @pytest.fixture(scope="session", autouse=True)
 def driver_get():
-    log_info()
     load_url(base_url)
-    # if registration == "yes":
-    #     load_url(base_url)
-    # else:
-    #     if os.environ.get("Environment"):
-    #         app_url = os.environ.get("Environment")
-    #         uname = os.environ.get("Email")
-    #         password = os.environ.get("Password")
-    #         log_into_app(app_url, uname, password)
-    #     else:
-    #         log_into_app(base_url, user_name, pwd)
     yield
     load_base_page(base_url)
     kill_driver_instance()
@@ -102,14 +97,8 @@ def pytest_sessionfinish(session, exitstatus):
     for val in sys.argv:
         if '--slack' in val:
             slack_value = val.split('=')[1]
-        if '--build' in val:
-            build = val.split('=')[1]
-            if not build:
-                build = "it's a local run not a Jenkins run"
-        else:
-            build = "it's a local run not a Jenkins run"
     if slack_value.lower() == 'yes':
-        post_reports_to_slack(build)
+        post_reports_to_slack()
 
 
 def get_test_file_name():
@@ -130,19 +119,12 @@ def pytest_html_results_table_row(report, cells):
 
 def pytest_assertion_pass(expl):
     filter_data = re.split('== | in | > | >= | < | <= | !=', expl)
+    logger.info(expl)
     if "True" in expl:
         logger.info(
             "Test Data for Pass Assertion ->" + " Actual: True" + " Expected: True" + ' PASS')
-    elif "==" in expl:
         logger.info(
             "Test Data for Pass Assertion ->" + " Actual: " + filter_data[0] + " Expected: " + filter_data[0] + ' PASS')
-    elif any(op in expl for op in ["<", ">", "<=", ">=", "!="]):
-        logger.info(
-            "Test Data for Pass Assertion ->" + " Left side value: " + filter_data[0] + " Right side value: " +
-            filter_data[1] + ' PASS')
-    else:
-        logger.info(
-            "Test Data for Pass Assertion ->" + " Actual: " + filter_data[1] + " Expected: " + filter_data[0] + ' PASS')
 
 
 def pytest_exception_interact(report):
@@ -165,28 +147,17 @@ def pytest_runtest_protocol(item, nextitem):
     return True
 
 
-@pytest.fixture(scope="module", autouse=True)
-def setup(request):
-    global url
-    global test_suite_name
-    test_suite_name = request.node.name
-    url = get_current_url()
-
-
 def tear_down():
-    print("Tear Down")
-
-
-#     # global t1
-#     # global outcome
-#     # global current_file
-#     # if collect_video in ["all", "on_failure"]:
-#     #     t1.join()
-#     #     report = outcome.get_result()
-#     #     if collect_video == "on_failure" and (report.passed or report.skipped):
-#     #         logger.info("Removing the video file as test passed or skipped :" + str(current_file))
-#     #         if os.path.exists(current_file):
-#     #             os.remove(current_file)
+    global t1
+    global outcome
+    global current_file
+    if collect_video in ["all", "on_failure"]:
+        t1.join()
+        report = outcome.get_result()
+        if collect_video == "on_failure" and (report.passed or report.skipped):
+            logger.info("Removing the video file as test passed or skipped :" + str(current_file))
+            if os.path.exists(current_file):
+                os.remove(current_file)
 
 
 def create_folder(folder, file_name=None):
@@ -202,47 +173,24 @@ def execute_teardown(request):
     request.addfinalizer(tear_down)
 
 
-def get_suit_list(suit):
-    n = len(suit)
-    suit_list = []
-    for i in range(1, n):
-        if "tests" in sys.argv[i]:
-            suit_list.append(sys.argv[i])
-    return suit_list
-
-
-def log_info():
-    logger.info("---------------------Printing Environment Variables---------------------\n")
-    if os.environ.get("Environment"):
-        logger.info(f'App: {os.environ.get("Environment")}')
-        logger.info(f'Browser: {os.environ.get("Browser")}')
-        logger.info(f'Username: {os.environ.get("Email")}')
-        logger.info(f'video_recording: {os.environ.get("collect_video")}')
-    else:
-        logger.info(f'App: {base_url}')
-        logger.info(f'Browser: {browser}')
-        logger.info(f'Username: {user_name}')
-
-#
-# @pytest.fixture(scope="function", autouse=True)
-# def on_start():
-#     global t_array
-#     global t1
-#     global current_file
-#     test_case_name = str(os.getenv('PYTEST_CURRENT_TEST').split("::")[1].split(" ")[0])
-#     if collect_video in ["all", "on_failure"]:
-#         if not os.path.exists(screenrecorder_folder):
-#             os.makedirs(screenrecorder_folder)
-#         folder_name = create_folder(screenrecorder_folder)
-#         filename = test_case_name + ".avi"
-#         video_file_path = os.path.join(os.path.sep, screenrecorder_folder, folder_name, filename)
-#         current_file = video_file_path
-#         try:
-#
-#             logger.info("Collect_video mode is:" + collect_video)
-#             if collect_video in ["all", "on_failure"]:
-#                 logger.info("Video recording starting for test " + test_case_name)
-#                 t1 = threading.Thread(target=set_screencapture, args=(test_case_name, video_file_path))
-#                 t1.start()
-#         except Exception as e:
-#             logger.info("Video recording failed with Exception:", e)
+@pytest.fixture(scope="function", autouse=True)
+def on_start():
+    global t_array
+    global t1
+    global current_file
+    test_case_name = str(os.getenv('PYTEST_CURRENT_TEST').split("::")[1].split(" ")[0])
+    if collect_video in ["all", "on_failure"]:
+        if not os.path.exists(screenrecorder_folder):
+            os.makedirs(screenrecorder_folder)
+        folder_name = create_folder(screenrecorder_folder)
+        filename = test_case_name + ".avi"
+        video_file_path = os.path.join(os.path.sep, screenrecorder_folder, folder_name, filename)
+        current_file = video_file_path
+        try:
+            logger.info("Collect_video mode is:" + collect_video)
+            if collect_video in ["all", "on_failure"]:
+                logger.info("Video recording starting for test " + test_case_name)
+                t1 = threading.Thread(target=set_screencapture, args=(test_case_name, video_file_path))
+                t1.start()
+        except Exception as e:
+            logger.info("Video recording failed with Exception:", e)

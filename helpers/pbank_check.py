@@ -211,7 +211,7 @@ class AssertCheck():
         assert a <= b, _aux_msg
 
 
-mcmp_check = AssertCheck()
+pbank_check = AssertCheck()
 
 def get_full_context(level):
     (_, filename, line, funcname, contextlist) = inspect.stack()[level][0:5]

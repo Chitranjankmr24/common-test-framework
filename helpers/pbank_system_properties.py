@@ -16,6 +16,7 @@ else:
 
 class SystemProperties(Enum):
     PBANK_URL = ('para-bank.url', '')
+    PBANK_API_URL = ('para-bank.api_url', '')
     PBANK_UNAME = ('para-bank.uname', '')
     PBANK_PASSWORD = ('para-bank.password', '')
     PBANK_BROWSER = ('para-bank.browser', '')
