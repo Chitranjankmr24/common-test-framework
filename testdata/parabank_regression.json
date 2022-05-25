@@ -9,5 +9,7 @@
   "ssn": "12345",
   "user": "uiautouser",
   "password": "Welcome1",
-  "confirm": "Welcome1"
+  "confirm": "Welcome1",
+  "loan_amount": 200,
+  "down_payment": 100
 }

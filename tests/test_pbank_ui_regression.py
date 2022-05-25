@@ -9,7 +9,6 @@ from locators.request_loan_locator import request_loan_msg
 from locators.user_registration_locator import registration_msg
 from pages.account_overview_page import get_acc_number, get_total_amount
 from pages.admin_page import clean_db
-from pages.clean_db_page import clean_db_request
 from pages.login_page import log_into_app, logout
 from pages.open_account_page import *
 from pages.request_loan_page import request_loan, click_request_loan
@@ -52,7 +51,7 @@ def test_verify_login():
     """check login feature"""
     global user_value
     log_into_app(base_url, user_value, pwd)
-    assert get_element_text(welcome_user) in "Welcome1 " + f"{get_data('first_name')} {get_data('last_name')}"
+    assert get_element_text(welcome_user) in "Welcome " + f"{get_data('first_name')} {get_data('last_name')}"
 
 
 def test_open_new_account():
@@ -65,6 +64,7 @@ def test_open_new_account():
     assert is_element_present(open_acc_msg, "Open Account success") and is_element_present(acc_no_msg, "Account "
                                                                                                        "number "
                                                                                                        "generated")
+
 
 def test_verify_total_amount():
     """Verify total amount"""
@@ -82,7 +82,6 @@ def test_request_loan():
 
 @pytest.mark.order('last')
 def test_db_clean():
-    """Clean DB"""
-    clean_db_request()
-    # clean_db()
-    # assert get_element_text(db_clean_msg) == "Database Cleaned"
+    """Clean DB UI"""
+    clean_db()
+    assert get_element_text(db_clean_msg) == "Database Cleaned"

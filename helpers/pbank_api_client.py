@@ -33,7 +33,7 @@ def create_headers(username=None, apikey=None, bearer_token=None):
     return headers
 
 
-def get_call(host_url, username=None, apikey=None, bearer_token=None, raise_exception=True):
+def get_request(host_url, username=None, apikey=None, bearer_token=None, raise_exception=True):
     headers = create_headers(username, apikey, bearer_token)
     json_resp = session.get(url=host_url, headers=headers)
     logger.info("json_resp.status_code " + str(json_resp.status_code))
@@ -41,21 +41,21 @@ def get_call(host_url, username=None, apikey=None, bearer_token=None, raise_exce
     return json_resp
 
 
-def post_call(host_url, json_payload=None, username=None, apikey=None, bearer_token=None):
+def post_request(host_url, json_payload=None, username=None, apikey=None, bearer_token=None):
     headers = create_headers(username, apikey, bearer_token)
     json_resp = session.post(url=host_url, data=json_payload, headers=headers)
     logger.info("json_resp.status_code " + str(json_resp.status_code))
     return json_resp
 
 
-def put_call(host_url, json_payload=None, username=None, apikey=None, bearer_token=None):
+def put_request(host_url, json_payload=None, username=None, apikey=None, bearer_token=None):
     headers = create_headers(username, apikey, bearer_token)
     json_resp = session.put(url=host_url, data=json_payload, headers=headers)
     logger.info("json_resp.status_code " + str(json_resp.status_code))
     return json_resp
 
 
-def delete_call(host_url, username=None, apikey=None, bearer_token=None):
+def delete_request(host_url, username=None, apikey=None, bearer_token=None):
     headers = create_headers(username, apikey, bearer_token)
     json_resp = session.delete(url=host_url, headers=headers)
     logger.info("json_resp.status_code " + str(json_resp.status_code))

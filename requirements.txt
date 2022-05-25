@@ -18,3 +18,5 @@ opencv-python>=4.5.4.60
 pytest-order
 Pillow~=9.1.1
 requests~=2.27.1
+justext~=3.0.0
+beautifulsoup4~=4.11.1

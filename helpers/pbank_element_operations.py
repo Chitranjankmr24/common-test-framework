@@ -70,12 +70,6 @@ def get_element_text(locator):
 
 
 @wait_for_load
-def clear_input_field_entry(locator):
-    elem = wait.until(EC.visibility_of_element_located((locator[0], locator[1])))
-    elem.clear()
-
-
-@wait_for_load
 def type_text(locator, value, elem_name):
     elem = wait.until(EC.visibility_of_element_located((locator[0], locator[1])))
     elem.clear()
@@ -109,16 +103,6 @@ def type_value_and_enter(locator, value, elem_name):
 
 
 @wait_for_load
-def type_value_key_down_enter(locator, value, elem_name):
-    elem = wait.until(EC.visibility_of_element_located((locator[0], locator[1])))
-    elem.clear()
-    elem.send_keys(value)
-    time.sleep(2)
-    elem.send_keys(Keys.DOWN + Keys.ENTER)
-    logger.info(f"Entered text {value} in textbox {elem_name}")
-
-
-@wait_for_load
 def press_enter_key(locator, elem_name):
     elem = wait.until(EC.visibility_of_element_located((locator[0], locator[1])))
     elem.send_keys(Keys.ENTER)
@@ -137,13 +121,6 @@ def get_attribute_value(locator, attribute_name):
 def get_element(locator):
     elem = wait.until(EC.presence_of_element_located((locator[0], locator[1])))
     logger.info(f"Getting the reference of Webelement with locator : {locator}")
-    return elem
-
-
-# get all elements of a locator
-def get_all_elements(locator, logger_element_info):
-    elem = wait.until(EC.presence_of_all_elements_located((locator[0], locator[1])))
-    logger.info(f"Number of elements found are {len(elem)}: for {logger_element_info}")
     return elem
 
 
@@ -166,18 +143,8 @@ def get_element_text_replace_value(locator, value, elem_name):
 
 
 @wait_for_load
-def get_element_text_replace_value_without_load_check(locator, value, elem_name):
-    # getting element text without wait, supports only xpath
-    if not type(value) is list: value = [value]
-    elem = driver.find_element_by_xpath(locator[1].format(*value))
-    actual_text = elem.text
-    logger.info(f"(No page load check) Element: {elem_name} replaced with value: {value} has Text: {actual_text}")
-    return actual_text
-
-
-@wait_for_load
 def get_elements_texts(locator):
-    elems = wait.until(EC.visibility_of_all_elements_located((locator[0], locator[1])))
+    elems = wait.until(EC.presence_of_all_elements_located((locator[0], locator[1])))
     texts = []
     for elem in elems:
         texts.append(elem.text.strip())
