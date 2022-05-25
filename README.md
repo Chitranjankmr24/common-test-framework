@@ -1,5 +1,5 @@
 # rr-qa-automation-assignment
-This is the UI Automation framework using python, selenium and pytest
+This is the UI and API Automation framework using python, selenium and pytest
 ## Pre-requisites:
 - Install Python 3.7 and up
     - for required packages read [requirements.txt](https://github.com/Chitranjankmr24/rr-qa-automation-assignment/blob/main/requirements.txt)
@@ -41,4 +41,13 @@ pytest -vv -rA tests
 
 ## Jenkins Run
  You can choose the application url and one specific feature
+
+## Execution Report:  
+
+![image](https://user-images.githubusercontent.com/105901438/170267501-e5f575da-d6d5-43b6-ad85-12040201a167.png)
+
+## Slack Report: 
+
+![image](https://user-images.githubusercontent.com/105901438/170272528-4b17bb74-5c87-4c2b-9fe1-42999f8bc704.png)
+
 
