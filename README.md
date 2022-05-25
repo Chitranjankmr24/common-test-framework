@@ -42,3 +42,7 @@ pytest -vv -rA tests
 ## Jenkins Run
  You can choose the application url and one specific feature
 
+##Execution Report:
+
+![image](https://user-images.githubusercontent.com/105901438/170267501-e5f575da-d6d5-43b6-ad85-12040201a167.png)
+
