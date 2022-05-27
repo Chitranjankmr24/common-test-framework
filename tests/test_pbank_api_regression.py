@@ -2,6 +2,7 @@ import pytest
 from pages.clean_db_page import clean_db_request
 from pages.product_page import get_products
 
+pytestmark = pytest.mark.api
 
 def test_verify_products():
     """Verify products"""

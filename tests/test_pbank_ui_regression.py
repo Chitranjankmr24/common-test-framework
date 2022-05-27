@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from helpers.pbank_env import base_url, pwd
@@ -20,6 +22,8 @@ from helpers.pbank_check import pbank_check as check
 test_data_path = os.path.join(testdata_folder, "parabank_regression.json")
 user_value = None
 
+pytestmark = pytest.mark.ui
+
 
 @pytest.fixture(scope="session", autouse=True)
 def fixture_func():
@@ -31,7 +35,7 @@ def test_register_new_user():
     """Register new user"""
     global user_value
     user_value = generate_user()
-    modify_param = {'user': user_value, 'address': get_random_int(get_data("address"))}
+    modify_param = {'user': user_value}
     modify_parameter(modify_param)
     set_data_path(test_data_path)
     create_new_user()

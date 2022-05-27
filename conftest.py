@@ -1,4 +1,5 @@
 import os.path
+import pathlib
 import threading
 
 import pytest
@@ -65,7 +66,7 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_html_report_title(report):
-    report.title = "Para Bank UI Automation Report"
+    report.title = "Para Bank Automation Execution Report"
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -194,3 +195,20 @@ def on_start():
                 t1.start()
         except Exception as e:
             logger.info("Video recording failed with Exception:", e)
+
+
+def pytest_collection_modifyitems(config, items):
+    rootdir = pathlib.Path(config.rootdir)
+    for item in items:
+        rel_path = pathlib.Path(item.fspath).relative_to(rootdir)
+        mark_name = next((part for part in rel_path.parts if part.endswith('_tests')), '').removesuffix('_tests')
+        if mark_name:
+            mark = getattr(pytest.mark, mark_name)
+            item.add_marker(mark)
+
+
+def pytest_configure(config):
+    rootdir = pathlib.Path(config.rootdir)
+    for dir_ in rootdir.rglob('*_tests'):
+        mark_name = dir_.stem.removesuffix('_tests')
+        config.addinivalue_line('markers', mark_name)

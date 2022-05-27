@@ -1,9 +1,7 @@
-import os
 import warnings
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import IEDriverManager
-
 from helpers.pbank_env import browser, browser_mode
 from helpers.pbank_system_properties import current_os
 from selenium import webdriver
@@ -42,14 +40,12 @@ def wait_for_load(function):
 def create_driver():
     web_driver = None
     browser_type = browser.lower()
-    if os.environ.get("Browser"):
-        browser_type = os.environ.get("Browser").lower()
     if browser_type == "firefox":
         cap = DesiredCapabilities().FIREFOX
         cap["marionette"] = True
         firefox_options = webdriver.FirefoxOptions()
         firefox_options.set_preference("dom.disable_beforeunload", True)
-        web_driver = webdriver.Firefox(GeckoDriverManager().install(), options=firefox_options,
+        web_driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=firefox_options,
                                        desired_capabilities=cap)
     elif browser_type == "chrome":
         chrome_options = set_chrome_options()
@@ -60,7 +56,6 @@ def create_driver():
         warnings.filterwarnings(action="ignore", message="unclosed", category=ResourceWarning)
         web_driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options,
                                       desired_capabilities=capabilities)
-
     elif browser_type == "ie":
         cap = DesiredCapabilities.INTERNETEXPLORER
         cap["NATIVE_EVENTS"] = False
@@ -136,16 +131,6 @@ def set_chrome_options():
     }
     options.add_experimental_option("prefs", preferences)
     return options
-
-
-def set_firefox_preferences():
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("network.proxy.type", 4)
-    profile.set_preference("browser.download.folderList", 2)
-    profile.set_preference("browser.download.manager.showWhenStarting", False)
-    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream")
-    profile.update_preferences()
-    return profile
 
 
 def delete_cookies():
