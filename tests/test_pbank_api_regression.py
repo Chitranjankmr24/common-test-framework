@@ -4,6 +4,7 @@ from pages.product_page import get_products
 
 pytestmark = pytest.mark.api
 
+
 def test_verify_products():
     """Verify products"""
     res = get_products()
@@ -15,4 +16,3 @@ def test_db_clean_api():
     """Clean DB API"""
     res = clean_db_request()
     assert res.status_code == 204
-

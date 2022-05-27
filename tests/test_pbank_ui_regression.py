@@ -72,8 +72,8 @@ def test_open_new_account():
 
 def test_verify_total_amount():
     """Verify total amount"""
-    get_total_amount()
-    # assert is_element_present(request_loan_msg, "Request Loan success")
+    total_amt = get_total_amount()
+    assert total_amt is not None
 
 
 @pytest.mark.depends(on=['test_register_new_user'])
