@@ -44,7 +44,7 @@ def test_register_new_user():
 
 @pytest.mark.depends(on=['test_register_new_user'])
 def test_logout():
-    """check logout feature"""
+    """Check logout feature"""
     logout()
     check.is_true(is_element_present(user_textbox, "username"))
     check.is_true(is_element_present(pwd_textbox, "Password"))
@@ -52,7 +52,7 @@ def test_logout():
 
 @pytest.mark.depends(on=['test_register_new_user'])
 def test_verify_login():
-    """check login feature"""
+    """Check login feature"""
     global user_value
     log_into_app(base_url, user_value, pwd)
     assert get_element_text(welcome_user) in "Welcome " + f"{get_data('first_name')} {get_data('last_name')}"
