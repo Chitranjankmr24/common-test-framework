@@ -1,4 +1,4 @@
-# rr-qa-automation-assignment
+### UI and API Automation using Python, Selenium, and requests
 This is the UI and API Automation framework using python, selenium and pytest and it is a data driven framework where page object model is the design pattern.
 ## Pre-requisites:
 - Install Python 3.7 and up
